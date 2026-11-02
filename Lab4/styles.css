@@ -1,0 +1,98 @@
+/* Скидання box-sizing: ширина враховує padding і border */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header, footer {
+    background-color: #2c3e50;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+}
+
+header h1 {
+    margin: 0 0 5px;
+}
+
+/* Flex-контейнер галереї */
+.gallery {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+/* Картка – демонстрація Box Model */
+.card {
+    flex: 0 1 calc(25% - 20px);   /* 4 картки в ряд на ПК */
+    background-color: #ffffff;
+    border: 1px solid #ddd;        /* border */
+    border-radius: 8px;
+    padding: 10px;                 /* padding */
+    margin: 0;                     /* margin задається через gap */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.03);
+}
+
+.card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 5px;
+    display: block;
+}
+
+.card h3 {
+    margin: 10px 0 5px;
+}
+
+.card p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* ===== Планшет ===== */
+@media (max-width: 992px) {
+    .card {
+        flex: 0 1 calc(50% - 20px);   /* 2 картки в ряд */
+    }
+}
+
+/* ===== Мобільна версія ===== */
+@media (max-width: 600px) {
+    body {
+        font-family: Georgia, serif;   /* змінений шрифт */
+        font-size: 18px;               /* змінений розмір шрифту */
+    }
+
+    .gallery {
+        flex-direction: column;        /* блоки один під одним */
+        align-items: center;
+    }
+
+    .card {
+        flex: 1 1 auto;
+        width: 100%;
+        background-color: #dff0ff;     /* змінений колір заливки */
+    }
+
+    .card p {
+        font-size: 16px;
+    }
+}

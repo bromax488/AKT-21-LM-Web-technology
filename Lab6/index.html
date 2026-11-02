@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Лабораторна робота 6: DOM та події</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f5f7fa; color: #333; }
+    header, footer { background: #34495e; color: #fff; text-align: center; padding: 15px; }
+    main { max-width: 700px; margin: 20px auto; padding: 0 15px; }
+    section { background: #fff; border-radius: 8px; padding: 15px; margin-bottom: 15px;
+              box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+    button { padding: 8px 14px; margin: 5px 5px 5px 0; border: none; border-radius: 5px;
+             background: #2980b9; color: #fff; cursor: pointer; }
+    button:hover { background: #1f6391; }
+    input { padding: 7px; width: 60%; }
+    #hoverText { padding: 10px; transition: all .3s; }
+    .highlight { background: #ffe082; font-size: 1.3em; }
+    li { margin: 4px 0; }
+    li button { background: #c0392b; padding: 3px 8px; }
+    #counterBtn { background: #27ae60; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Робота з DOM та подіями</h1>
+    <p>Максим Лутчин, АКТ-21, варіант 8</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>1. Зміна вмісту при кліку</h2>
+      <p id="changeText">Цей текст зміниться після натискання кнопки.</p>
+      <button id="changeBtn">Змінити текст</button>
+    </section>
+
+    <section>
+      <h2>2. Зміна стилю при наведенні</h2>
+      <p id="hoverText">Наведіть курсор на цей абзац.</p>
+    </section>
+
+    <section>
+      <h2>3. Список завдань (додавання / видалення)</h2>
+      <input type="text" id="itemInput" placeholder="Новий елемент списку">
+      <button id="addBtn">Додати</button>
+      <ul id="itemList">
+        <li>Вивчити DOM <button class="del">✕</button></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Додаткове завдання</h2>
+      <button id="counterBtn">Натисніть 8 разів!</button>
+      <p id="counterInfo">Натискань: 0</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Максим Лутчин</p>
+  </footer>
+
+  <script>
+    // Доступ до елементів DOM
+    const changeText = document.getElementById("changeText");
+    const changeBtn = document.getElementById("changeBtn");
+    const hoverText = document.querySelector("#hoverText");
+    const itemInput = document.getElementById("itemInput");
+    const addBtn = document.getElementById("addBtn");
+    const itemList = document.getElementById("itemList");
+    const counterBtn = document.getElementById("counterBtn");
+    const counterInfo = document.getElementById("counterInfo");
+
+    // 1. Клік: зміна текстового вмісту через textContent
+    function updateText() {
+      changeText.textContent = "Текст змінено за допомогою JavaScript! (" +
+        new Date().toLocaleTimeString() + ")";
+      console.log("Текст змінено");
+    }
+    changeBtn.addEventListener("click", updateText);
+
+    // 2. Наведення: зміна стилю
+    hoverText.addEventListener("mouseover", () => hoverText.classList.add("highlight"));
+    hoverText.addEventListener("mouseout", () => hoverText.classList.remove("highlight"));
+
+    // 3. Додавання та видалення елементів
+    function addItem() {
+      const text = itemInput.value.trim();
+      if (text === "") {
+        alert("Введіть текст елемента!");
+        return;
+      }
+      const li = document.createElement("li");
+      li.innerHTML = text + ' <button class="del">✕</button>';
+      itemList.appendChild(li);
+      itemInput.value = "";
+      console.log("Додано елемент:", text);
+    }
+    addBtn.addEventListener("click", addItem);
+
+    // Видалення – делегування події на весь список
+    itemList.addEventListener("click", (event) => {
+      if (event.target.classList.contains("del")) {
+        event.target.parentElement.remove();
+        console.log("Елемент видалено");
+      }
+    });
+
+    // Додаткове завдання: alert після 8 натискань
+    const N = 8;
+    let clicks = 0;
+    counterBtn.addEventListener("click", () => {
+      clicks++;
+      counterInfo.textContent = "Натискань: " + clicks;
+      if (clicks === N) {
+        alert("Максим Лутчин варіант номер 8!");
+        clicks = 0;
+        counterInfo.textContent = "Натискань: 0";
+      }
+    });
+  </script>
+</body>
+</html>

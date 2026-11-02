@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Лабораторна робота 8: Fetch API</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f6f8; margin: 0; padding: 20px; color: #333; }
+    h1 { text-align: center; }
+    .container { max-width: 1000px; margin: 0 auto; }
+    .toolbar { margin-bottom: 15px; }
+    button { padding: 8px 16px; border: none; border-radius: 5px; background: #2e7d32;
+             color: #fff; cursor: pointer; }
+    button:hover { background: #1b5e20; }
+    table { width: 100%; border-collapse: collapse; background: #fff;
+            box-shadow: 0 1px 5px rgba(0,0,0,.1); }
+    th, td { padding: 10px; border-bottom: 1px solid #e0e0e0; text-align: left; }
+    th { background: #2e7d32; color: #fff; }
+    tr:hover td { background: #f1f8e9; }
+    form { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; background: #fff;
+           padding: 15px; border-radius: 8px; box-shadow: 0 1px 5px rgba(0,0,0,.1); }
+    form input { flex: 1 1 180px; padding: 8px; border: 1px solid #ccc; border-radius: 5px; }
+    #status { margin: 10px 0; font-style: italic; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Список користувачів (JSONPlaceholder)</h1>
+    <p>Максим Лутчин, АКТ-21, варіант 8 – користувачі</p>
+
+    <div class="toolbar">
+      <button id="reloadBtn">Оновити</button>
+    </div>
+    <div id="status"></div>
+
+    <table>
+      <thead>
+        <tr><th>ID</th><th>Ім'я</th><th>Username</th><th>Email</th><th>Місто</th><th>Телефон</th></tr>
+      </thead>
+      <tbody id="usersBody"></tbody>
+    </table>
+
+    <form id="addForm">
+      <input type="text" id="fName" placeholder="Ім'я" required>
+      <input type="text" id="fUsername" placeholder="Username" required>
+      <input type="email" id="fEmail" placeholder="Email" required>
+      <input type="text" id="fCity" placeholder="Місто">
+      <input type="text" id="fPhone" placeholder="Телефон">
+      <button type="submit">Добавити</button>
+    </form>
+  </div>
+
+  <script>
+    const API_URL = "https://jsonplaceholder.typicode.com/users";
+    const tbody = document.getElementById("usersBody");
+    const statusEl = document.getElementById("status");
+
+    // Додати один рядок у таблицю
+    function addRow(user) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${user.id}</td>
+        <td>${user.name}</td>
+        <td>${user.username}</td>
+        <td>${user.email}</td>
+        <td>${user.address ? user.address.city : ""}</td>
+        <td>${user.phone || ""}</td>`;
+      tbody.appendChild(tr);
+    }
+
+    // Завантаження даних з API через fetch()
+    async function loadUsers() {
+      statusEl.textContent = "Завантаження...";
+      tbody.innerHTML = "";
+      try {
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        const users = await response.json();
+        users.forEach(addRow);
+        statusEl.textContent = "Завантажено записів: " + users.length;
+        console.log(users);
+      } catch (error) {
+        statusEl.textContent = "Помилка завантаження: " + error.message;
+      }
+    }
+
+    document.getElementById("reloadBtn").addEventListener("click", loadUsers);
+
+    // Додавання нового запису з форми
+    document.getElementById("addForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const newUser = {
+        id: tbody.rows.length + 1,
+        name: document.getElementById("fName").value.trim(),
+        username: document.getElementById("fUsername").value.trim(),
+        email: document.getElementById("fEmail").value.trim(),
+        address: { city: document.getElementById("fCity").value.trim() },
+        phone: document.getElementById("fPhone").value.trim()
+      };
+      addRow(newUser);
+      e.target.reset();
+    });
+
+    loadUsers();
+  </script>
+</body>
+</html>

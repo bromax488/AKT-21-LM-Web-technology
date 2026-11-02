@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Лабораторна робота 5: Вступ до JavaScript</title>
+</head>
+<body>
+  <h1>Лабораторна робота 5: Вступ до JavaScript</h1>
+  <p>Максим Лутчин, АКТ-21, варіант 8</p>
+  <p>Відкрийте консоль (F12 → Console), щоб побачити результати.</p>
+
+  <script>
+    // Мій вік – константа (змініть, якщо потрібно)
+    const MY_AGE = 18;
+
+    // Завдання 1: Привітання користувача
+    function greetUser() {
+      console.log("Завдання 1.");
+      const name = prompt("Як вас звати?");
+      const message = "Привіт, " + name + "! Радий тебе бачити!";
+      alert(message);
+      console.log(message);
+    }
+
+    // Завдання 2: Проста арифметика
+    // Варіант 8 – парний, тому обчислюємо суму та різницю
+    function calculate() {
+      console.log("Завдання 2.");
+      const a = parseFloat(prompt("Введіть перше число:"));
+      const b = parseFloat(prompt("Введіть друге число:"));
+
+      if (isNaN(a) || isNaN(b)) {
+        alert("Помилка: потрібно ввести числа!");
+        console.log("Помилка: введено не числа");
+        return;
+      }
+
+      const sum = a + b;
+      const diff = a - b;
+      const result = "Сума: " + sum + "\nРізниця: " + diff;
+      alert(result);
+      console.log("Сума:", sum, "Різниця:", diff);
+    }
+
+    // Завдання 3: Вік користувача
+    function userAge() {
+      console.log("Завдання 3.");
+      const birthYear = parseInt(prompt("Введіть ваш рік народження:"));
+      const currentYear = new Date().getFullYear();
+
+      if (isNaN(birthYear)) {
+        alert("Помилка: рік народження введено некоректно!");
+        return;
+      }
+
+      const age = currentYear - birthYear;
+      const difference = Math.abs(age - MY_AGE);
+      let message = "Ваш поточний вік: " + age + "\n";
+
+      if (age > MY_AGE) {
+        message += "Користувач старший на " + difference + " років.";
+      } else if (age < MY_AGE) {
+        message += "Користувач молодший на " + difference + " років.";
+      } else {
+        message += "Ми однолітки!";
+      }
+
+      alert(message);
+      console.log(message);
+    }
+
+    greetUser();
+    calculate();
+    userAge();
+  </script>
+</body>
+</html>

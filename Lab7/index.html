@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Лабораторна робота 7: Валідація форми</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #eef1f5; display: flex;
+           justify-content: center; padding: 30px 10px; margin: 0; }
+    form { background: #fff; padding: 25px; border-radius: 10px; width: 100%; max-width: 380px;
+           box-shadow: 0 2px 10px rgba(0,0,0,.1); }
+    h2 { text-align: center; margin-top: 0; }
+    label { display: block; margin-top: 12px; font-weight: bold; }
+    input[type=text], input[type=email], input[type=password], input[type=number] {
+      width: 100%; padding: 8px; margin-top: 4px; box-sizing: border-box;
+      border: 1px solid #ccc; border-radius: 5px; }
+    .radio-group label { display: inline; font-weight: normal; margin-right: 15px; }
+    .error { color: #d32f2f; font-size: 13px; min-height: 16px; }
+    .invalid { border-color: #d32f2f !important; }
+    button { width: 100%; margin-top: 18px; padding: 10px; background: #1976d2; color: #fff;
+             border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
+    button:hover { background: #125ea8; }
+  </style>
+</head>
+<body>
+  <form id="regForm" novalidate>
+    <h2>Реєстрація</h2>
+
+    <label for="name">Ім'я</label>
+    <input type="text" id="name">
+    <div class="error" id="nameError"></div>
+
+    <label for="email">Email</label>
+    <input type="email" id="email">
+    <div class="error" id="emailError"></div>
+
+    <label for="password">Пароль</label>
+    <input type="password" id="password">
+    <div class="error" id="passwordError"></div>
+
+    <label for="confirm">Підтвердження пароля</label>
+    <input type="password" id="confirm">
+    <div class="error" id="confirmError"></div>
+
+    <label for="age">Вік</label>
+    <input type="number" id="age">
+    <div class="error" id="ageError"></div>
+
+    <!-- Варіант 8 (парний): вибір статі -->
+    <label>Стать</label>
+    <div class="radio-group">
+      <label><input type="radio" name="gender" value="Чоловік"> Чоловік</label>
+      <label><input type="radio" name="gender" value="Жінка"> Жінка</label>
+    </div>
+    <div class="error" id="genderError"></div>
+
+    <button type="submit">Зареєструватися</button>
+  </form>
+
+  <script>
+    const form = document.getElementById("regForm");
+
+    // Показати / прибрати помилку біля поля
+    function setError(fieldId, message) {
+      document.getElementById(fieldId + "Error").textContent = message;
+      const input = document.getElementById(fieldId);
+      if (input) input.classList.toggle("invalid", message !== "");
+    }
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();          // не відправляємо форму, поки не перевіримо
+      let valid = true;
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const confirm = document.getElementById("confirm").value;
+      const age = parseInt(document.getElementById("age").value);
+      const gender = document.querySelector('input[name="gender"]:checked');
+
+      // Ім'я – обов'язкове
+      if (name === "") { setError("name", "Введіть ім'я"); valid = false; }
+      else setError("name", "");
+
+      // Email – формат
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (email === "") { setError("email", "Введіть email"); valid = false; }
+      else if (!emailPattern.test(email)) { setError("email", "Невірний формат email"); valid = false; }
+      else setError("email", "");
+
+      // Пароль – мінімум 6 символів
+      if (password.length < 6) { setError("password", "Пароль має містити мінімум 6 символів"); valid = false; }
+      else setError("password", "");
+
+      // Підтвердження пароля
+      if (confirm === "" || confirm !== password) { setError("confirm", "Паролі не збігаються"); valid = false; }
+      else setError("confirm", "");
+
+      // Вік – 10+
+      if (isNaN(age)) { setError("age", "Введіть вік"); valid = false; }
+      else if (age < 10) { setError("age", "Вік має бути 10 років або більше"); valid = false; }
+      else setError("age", "");
+
+      // Стать – має бути вибрана
+      if (!gender) { setError("gender", "Оберіть стать"); valid = false; }
+      else setError("gender", "");
+
+      if (valid) {
+        alert("Реєстрація успішна!");
+        console.log({ name, email, age, gender: gender.value });
+        form.reset();
+      }
+    });
+  </script>
+</body>
+</html>
